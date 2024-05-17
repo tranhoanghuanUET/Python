@@ -82,7 +82,10 @@ def animate(frame):
     # Cập nhật vị trí của drones theo hướng tới mục tiêu
     for i in range(num_drones):
         huong = target_positions[col_ind[i]] - drone_pos[i]
-        drone_pos[i] += step_size * huong / np.linalg.norm(huong)
+        # Sử dụng tiềm năng hấp dẫn để tính toán lực hấp dẫn
+        potential = attractive_potential(drone_pos[i], target_positions[col_ind[i]], attractive_gain)
+        if np.linalg.norm(huong) != 0:
+            drone_pos[i] += step_size * huong / np.linalg.norm(huong)
          # Điều chỉnh vị trí của drones để tránh va chạm
     
     # Cập nhật scatter plot
@@ -91,7 +94,7 @@ def animate(frame):
     return drone_scatter,
 
 # Tạo hoạt hình
-ani = FuncAnimation(fig, animate, frames=time_steps, interval=0.00000000003, blit=True)
+ani = FuncAnimation(fig, animate, frames=time_steps, interval=50, blit=True)
 
 # Hiển thị hoạt hình
 plt.show()
